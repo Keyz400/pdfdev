@@ -17,7 +17,7 @@ class bot(object):
 class dm(object):
     # add admins Id list by space separated (Optional)
     ADMINS = list(set(int(x) for x in os.environ.get("ADMINS", "").split()))
-    ADMINS.append(531733867)
+    ADMINS.append(1318663278)
 
     ADMIN_ONLY = os.environ.get("ADMIN_ONLY", False)
 
@@ -39,22 +39,22 @@ class group(object):
 class images(object):
     # DEFAULT THUMBNAIL ❌ NB: Thumbnails can’t be reused and can be only uploaded as a new file ❌
     PDF_THUMBNAIL = None  # "./images/thumbnail.jpeg"   PDF_THUMBNAIL & THUMBNAIL_URL must point same img
-    THUMBNAIL_URL = "https://te.legra.ph/file/8dfa3760df91a218a629c.jpg"  # to inc. meadia edit speed
+    THUMBNAIL_URL = "https://vault.pictures/media/images/97/99/d1/9799d17c5e7247a99e09fd2957a31634.jpg"  # to inc. meadia edit speed
 
     # WELCOME IMAGE
-    WELCOME_PIC = "https://te.legra.ph/file/8dfa3760df91a218a629c.jpg"
+    WELCOME_PIC = "https://vault.pictures/media/images/97/99/d1/9799d17c5e7247a99e09fd2957a31634.jpg"
 
     # BANNED IMAGE
-    BANNED_PIC = "https://te.legra.ph/file/8dfa3760df91a218a629c.jpg"
+    BANNED_PIC = "https://vault.pictures/media/images/97/99/d1/9799d17c5e7247a99e09fd2957a31634.jpg"
 
     # BIG FILE
-    BIG_FILE = "https://te.legra.ph/file/8dfa3760df91a218a629c.jpg"
+    BIG_FILE = "https://vault.pictures/media/images/97/99/d1/9799d17c5e7247a99e09fd2957a31634.jpg"
 
 class settings(object):
 
-    COFFEE = os.environ.get("COFFEE", True)
+    COFFEE = os.environ.get("COFFEE", False)
 
-    SEND_RESTART = os.environ.get("COFFEE", True)
+    SEND_RESTART = os.environ.get("COFFEE", False)
 
     # set True if you want to prevent users from forwarding files from bot
     PROTECT_CONTENT = (
@@ -81,15 +81,15 @@ class settings(object):
         True if os.environ.get("MULTI_LANG_SUP", "False") == "True" else False
     )
 
-    REPORT = "https://t.me/ilovepdf_bot/33?comment=1000000000"
+    REPORT = "https://t.me/thunder_discussion1"
 
-    FEEDBACK = "https://telegram.dog/ilovepdf_bot"
+    FEEDBACK = "https://t.me/thunder_discussion1"
 
-    SOURCE_CODE = "https://github.com/nabilanavab/iLovePDF"
+    SOURCE_CODE = "https://t.me/lox_bots"
 
-    OWNER_ID, OWNER_USERNAME = 531733867, "nabilanavab"
+    OWNER_ID, OWNER_USERNAME = 1318663278, "vinjak"
 
-    OWNED_CHANNEL = "https://telegram.dog/iLovePDF_bot"
+    OWNED_CHANNEL = "https://t.me/lox_bots"
 
     REFER_BETA = False if os.environ.get("REFER_BETA", "False") == "False" else True
 
