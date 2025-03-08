@@ -1,166 +1,61 @@
 {
-  "name": "ilovepdf_bot",
-  "description": "A Telegram Bot that helps you to do many things with PDFs.",
-  "keywords": [
-    "Telegram",
-    "Telegram Bot",
-    "PDF Bot",
-    "ilovepdf",
-    "nabilanavab",
-    "Python",
-    "ilovepdf_bot",
-    "Complete PDF Bot"
-  ],
-  "website": "https://github.com/nabilanavab/ilovepdf",
-  "repository": "https://github.com/nabilanavab/ilovepdf",
-  "logo": "https://te.legra.ph/file/84c63dd1fabde3b33cf90.jpg",
-  "success_url": "https://github.com/nabilanavab/ilovepdf",
-  "stack": "container",
-  "env": {
-    "API_ID": {
-      "description": "Your Telegram API ID. Get it from my.telegram.org.",
-      "value": "",
-      "required": true
-    },
-    "API_HASH": {
-      "description": "Your Telegram API Hash. Get it from my.telegram.org.",
-      "value": "",
-      "required": true
-    },
-    "API_TOKEN": {
-      "description": "Your Telegram bot token. Get it from @BotFather.",
-      "value": "",
-      "required": true
-    },
-    "ADMINS": {
-      "description": "List of admin user IDs separated by spaces (optional).",
-      "value": "",
-      "required": false
-    },
-    "ADMIN_ONLY": {
-      "description": "Set to 'True' to restrict bot usage to admins only (optional).",
-      "value": "False",
-      "required": false
-    },
-    "BANNED_USERS": {
-      "description": "List of banned user IDs separated by spaces (optional).",
-      "value": "",
-      "required": false
-    },
-    "ADMIN_GROUPS": {
-      "description": "List of admin group IDs separated by spaces (optional).",
-      "value": "",
-      "required": false
-    },
-    "ADMIN_GROUP_ONLY": {
-      "description": "Set to 'True' to restrict bot usage to admin groups only (optional).",
-      "value": "False",
-      "required": false
-    },
-    "BANNED_GROUP": {
-      "description": "List of banned group IDs separated by spaces (optional).",
-      "value": "",
-      "required": false
-    },
-    "ONLY_GROUP_ADMIN": {
-      "description": "Set to 'True' to restrict bot usage to group admins only (optional).",
-      "value": "False",
-      "required": false
-    },
-    "COFFEE": {
-      "description": "Set to 'True' to enable coffee mode (optional).",
-      "value": "True",
-      "required": false
-    },
-    "SEND_RESTART": {
-      "description": "Set to 'True' to send restart notifications (optional).",
-      "value": "True",
-      "required": false
-    },
-    "PROTECT_CONTENT": {
-      "description": "Set to 'True' to prevent users from forwarding files from the bot (optional).",
-      "value": "False",
-      "required": false
-    },
-    "UPDATE_CHANNEL": {
-      "description": "Channel ID for forced subscription (optional).",
-      "value": "",
-      "required": false
-    },
-    "CONVERT_API": {
-      "description": "ConvertAPI secret key (optional).",
-      "value": "",
-      "required": false
-    },
-    "MAX_FILE_SIZE": {
-      "description": "Maximum file size in bytes (optional).",
-      "value": "",
-      "required": false
-    },
-    "DEFAULT_NAME": {
-      "description": "Default file name (optional).",
-      "value": "",
-      "required": false
-    },
-    "DEFAULT_CAPTION": {
-      "description": "Default file caption (optional).",
-      "value": "",
-      "required": false
-    },
-    "DEFAULT_LANG": {
-      "description": "Default language for the bot (optional).",
-      "value": "eng",
-      "required": false
-    },
-    "MULTI_LANG_SUP": {
-      "description": "Set to 'True' to enable multi-language support (optional).",
-      "value": "False",
-      "required": false
-    },
-    "REFER_BETA": {
-      "description": "Set to 'True' to enable beta referral (optional).",
-      "value": "False",
-      "required": false
-    },
-    "STOP_BOT": {
-      "description": "Set to 'True' to stop the bot (optional).",
-      "value": "False",
-      "required": false
-    },
-    "REPORT": {
-      "description": "URL for reporting issues (optional).",
-      "value": "https://t.me/ilovepdf_bot/33?comment=1000000000",
-      "required": false
-    },
-    "FEEDBACK": {
-      "description": "URL for providing feedback (optional).",
-      "value": "https://telegram.dog/ilovepdf_bot",
-      "required": false
-    },
-    "SOURCE_CODE": {
-      "description": "URL for the bot's source code (optional).",
-      "value": "https://github.com/nabilanavab/iLovePDF",
-      "required": false
-    },
-    "OWNER_ID": {
-      "description": "Owner's Telegram user ID (optional).",
-      "value": "531733867",
-      "required": false
-    },
-    "OWNER_USERNAME": {
-      "description": "Owner's Telegram username (optional).",
-      "value": "nabilanavab",
-      "required": false
-    },
-    "OWNED_CHANNEL": {
-      "description": "URL for the bot's official channel (optional).",
-      "value": "https://telegram.dog/iLovePDF_bot",
-      "required": false
-    }
-  },
-  "buildpacks": [
-    {
-      "url": "heroku/python"
-    }
-  ]
+	"name": "ilovepdf_bot",
+	"description": "A Telegram Bot that helps you to domany this with pdf.",
+	"keywords": [
+		"Telegram", "Telegram Bot", "pdf bot",
+		"ilovepdf", "nabilabavab", "python",
+		"ilovepdf_bot", "complete pdf bot"
+	],
+	"website": "https://github.com/nabilanavab/ilovepdf",
+	"repository": "https://github.com/nabilanavab/ilovepdf",
+	"logo": "https://te.legra.ph/file/84c63dd1fabde3b33cf90.jpg",
+	"success_url": "https://github.com/nabilanavab/ilovepdf",
+	"stack": "container",
+	"env": {
+		"API_ID": {
+			"description": "API_ID from my.telegram.org",
+			"required": true
+		},
+		"API_HASH": {
+			"description": "API_ID from my.telegram.org",
+			"required": true
+		},
+		"API_TOKEN": {
+			"description": "API_TOKEN from @botfather",
+			"required": true
+		},
+		"MONGODB_URI": {
+			"description": "MongoDB Url",
+			"required":true
+		},
+		"UPDATE_CHANNEL": {
+			"description": "ChannelId if you need force Subscription",
+			"required": false
+		},
+		"ADMINS": {
+			"description": "Admins id seperated by free space",
+			"required": false
+		},
+		"ADMIN_ONLY": {
+			"description": "If True only admins can use it",
+			"required": false
+		},
+		"MAX_FILE_SIZE": {
+			"description": "for preventing overload (in mb)",
+			"required": false
+		},
+		"BANNED_USER": {
+			"description": "Baned Users Id",
+			"required": false
+		},
+		"LOG_CHANNEL": {
+			"description": "Database Channel",
+			"required": false
+		}
+	},
+	"buildpacks": [
+		{
+			"url": "heroku/python"
+		}
+	]
 }
