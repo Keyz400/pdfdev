@@ -90,10 +90,8 @@ async def start(bot, message):
             reply_markup=tBTN,
             caption=tTXT.format(message.from_user.mention, myID[0].mention),
         )
-
-        # Send the sticker and delete it immediately
         tTXT, tBTN = await util.translate(text="HOME['search']", lang_code=lang_code)
-        sticker_msg = await message.reply_sticker(
+        await message.reply_sticker(
             sticker="CAACAgIAAxkBAAEVZ65kduZn7WTQXlyDFErYqb0BvyoIEQACVQADr8ZRGmTn_PAl6RC_LwQ",
             reply_markup=InlineKeyboardMarkup(
                 [
@@ -106,8 +104,6 @@ async def start(bot, message):
                 ]
             ),
         )
-        await sticker_msg.delete()  # Delete the sticker immediately
-
         if "-" in message.text and get_pdf:
             await decode(bot, get_pdf, message, lang_code)
         return await message.delete()
