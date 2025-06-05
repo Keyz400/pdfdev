@@ -4,6 +4,11 @@
 
 file_name = "ILovePDF/pdf.py"
 
+# Load environment variables FIRST
+from dotenv import load_dotenv
+load_dotenv()
+
+import asyncio
 from configs.config import bot
 from telebot import async_telebot
 
@@ -15,7 +20,13 @@ works = {"u": [], "g": []}  # broken works
 pyTgLovePDF = async_telebot.AsyncTeleBot(bot.API_TOKEN, parse_mode="Markdown")
 # TELEBOT (pyTelegramBotAPI) Asyncio [for uploading group doc, imgs]
 
-pyTgLovePDF.polling()
+# FIXED: Proper async polling
+async def main():
+    print("Starting iLovePDF bot...")
+    await pyTgLovePDF.polling(non_stop=True)
+
+if __name__ == "__main__":
+    asyncio.run(main())
 
 
 # If you have any questions or suggestions, please feel free to reach out.
