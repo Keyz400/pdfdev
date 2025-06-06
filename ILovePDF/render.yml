@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: ilovepdf-app
+    env: python
+    plan: free
+    buildCommand: "pip install -r ILovePDF/requirements.txt"
+    startCommand: "python3 app.py && python3 __main__.py"
+    autoDeploy: true
