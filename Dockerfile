@@ -1,21 +1,31 @@
 FROM python:3.11
+
 RUN mkdir /pdf && chmod 777 /pdf
 
 WORKDIR /ILovePDF
 
-COPY ILovePDF/requirements.txt requirements.txt
+# Copy requirements.txt files
+COPY ILovePDF/requirements.txt ./requirements.txt
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-COPY ILovePDF/libgenesis/requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+COPY ILovePDF/libgenesis/requirements.txt ./libgenesis_requirements.txt
+RUN pip install -r libgenesis_requirements.txt
 
-RUN apt update
-RUN apt install -y ocrmypdf
-RUN apt install -y wkhtmltopdf
+# Install system dependencies in one layer
+RUN apt-get update && apt-get install -y \
+    ocrmypdf \
+    wkhtmltopdf \
+    tree \
+ && rm -rf /var/lib/apt/lists/*
 
-COPY /ILovePDF .
+# Copy the ILovePDF folder contents into /ILovePDF
+COPY ILovePDF/ .
 
-RUN apt-get install -y tree
+# Optional: show the directory tree structure
 RUN tree
 
-CMD bash run.sh
+# Copy and use run.sh as the entrypoint
+COPY run.sh /ILovePDF/run.sh
+RUN chmod +x /ILovePDF/run.sh
+
+CMD ["bash", "run.sh"]
