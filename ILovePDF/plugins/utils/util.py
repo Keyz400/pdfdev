@@ -4,134 +4,145 @@
 
 file_name = "ILovePDF/plugins/utils/util.py"
 
-from plugins import *
-from configs.db import myID
-from itertools import islice
-from configs.db import dataBASE
+import re
+import os
+import sys
+import asyncio
+from logger import logger
 from configs.config import settings
-from lang import __users__, langList
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-# loading languages
+# Import language modules
 try:
-    if settings.MULTI_LANG_SUP:
-        langs = os.listdir(f"./lang")
-        for lang in langs:
-            if lang.endswith(".py") and lang not in [
-                "__init__.py",
-                "__users__.py",
-                "__demo__.py",
-            ]:
-                exec(f"from lang import {lang[:-3]}")
-                logger.debug(f"adding {lang[:-3]}")
-    else:
+    if settings.DEFAULT_LANG:
         exec(f"from lang import {settings.DEFAULT_LANG}")
-        exec(f"from lang import eng")
-except Exception as Error:
-    logger.debug(f"lang: %s" % (Error), exc_info=True)
-    logger.debug(f"ERROR IN DEFAULT LANG: {Error}")
-
-
-#  BUTTON CREATOR 
-deBUTTON_SPLIT = 2
-async def createBUTTON(btn, order=deBUTTON_SPLIT):
+        logger.debug(f"Successfully imported language: {settings.DEFAULT_LANG}")
+    else:
+        from lang import eng
+        logger.debug("Using default English language")
+except Exception as e:
+    logger.debug(f"Error importing language {settings.DEFAULT_LANG}: {e}")
     try:
-        # https://favtutor.com/blogs/string-to-dict-python
-        # btn =  ast.literal_eval(btn)   # convert str to dict
-        button = []
-        for key, value in btn.items():
-            if value.startswith(tuple(["https://", "http://"])):
-                temp = InlineKeyboardButton(
-                    key, url=value.format(myID[0].username)
-                )  # add bot_username for creating add grup link else pass
-            else:
-                temp = InlineKeyboardButton(key, callback_data=value)
-            button.append(temp)
-        if order == deBUTTON_SPLIT:
-            keyboard = [
-                button[i : i + deBUTTON_SPLIT]
-                for i in range(0, len(button), deBUTTON_SPLIT)
-            ]
+        from lang import eng
+        settings.DEFAULT_LANG = "eng"
+        logger.debug("Fallback to English language")
+    except Exception as e2:
+        logger.debug(f"Critical error: Cannot import any language module: {e2}")
+        sys.exit(1)
+
+# Language utilities
+async def getLang(chat_id):
+    """Get language code for chat"""
+    try:
+        from lang.__users__ import userLang
+        return userLang.get(chat_id, settings.DEFAULT_LANG)
+    except Exception:
+        return settings.DEFAULT_LANG
+
+async def translate(text, lang_code="eng", button=None, order=None):
+    """Translate text and buttons to specified language"""
+    try:
+        # Get the language module
+        if lang_code == "eng":
+            lang_module = eng
         else:
-            new_order = [int(x) for x in str(order)]
-            button = iter(button)
-            keyboard = [list(islice(button, elem)) for elem in new_order]
-
-        return InlineKeyboardMarkup(keyboard)
-    except Exception as Error:
-        logger.exception("🐞 %s : %s" % (file_name, Error))
-
-
-#  TEXT, BUTTON TRANSLATOR 
-async def translate(
-    text :str = None,
-    button :dict = None,
-    asString :bool = False,
-    order :int = deBUTTON_SPLIT,
-    lang_code :str = settings.DEFAULT_LANG,
-):
-    rtn_text = text
-    rtn_button = button
-    try:
-        if text is not None:
-            rtn_text = eval(f"{lang_code}.{text}")
-        if button is not None:
-            rtn_button = eval(f"{lang_code}.{button}")
-    except Exception as Error:
-        logger.debug(f"❌❌ can't find {text} : %s" % (Error))
-        if text is not None:
+            try:
+                lang_module = __import__(f"lang.{lang_code}", fromlist=[lang_code])
+            except ImportError:
+                lang_module = eng
+                lang_code = "eng"
+        
+        # Get translated text
+        try:
+            rtn_text = eval(f"lang_module.{text}")
+        except AttributeError:
+            # Fallback to English if translation not found
             rtn_text = eval(f"eng.{text}")
-        if button is not None:
-            rtn_button = eval(f"eng.{button}")
-    finally:
-        if asString:
-            return rtn_text, rtn_button  # return button as String
+        
+        # Handle buttons if provided
+        rtn_button = None
+        if button:
+            try:
+                rtn_button = eval(f"lang_module.{button}")
+                if order:
+                    rtn_button = await createBUTTON(btn=rtn_button, order=order)
+            except AttributeError:
+                try:
+                    rtn_button = eval(f"eng.{button}")
+                    if order:
+                        rtn_button = await createBUTTON(btn=rtn_button, order=order)
+                except Exception:
+                    rtn_button = None
+        
+        return rtn_text, rtn_button
+        
+    except Exception as e:
+        logger.exception(f"Translation error for {text}: {e}")
+        return f"Translation Error: {text}", None
+
+async def createBUTTON(btn, order=None):
+    """Create inline keyboard from button dictionary"""
     try:
-        if button is not None:
-            rtn_button = await createBUTTON(btn=rtn_button, order=order)
-    except Exception as Error:
-        logger.debug("🚫 %s: %s" % (file_name, Error))
-    finally:
-        return (
-            rtn_text,
-            rtn_button,
-        )  # return desired text, button (one text+button at once)
+        if not btn or not isinstance(btn, dict):
+            return None
+            
+        buttons = []
+        if order:
+            # Handle ordered button layout
+            order_str = str(order)
+            current_row = []
+            btn_items = list(btn.items())
+            btn_index = 0
+            
+            for char in order_str:
+                row_size = int(char)
+                row = []
+                for _ in range(row_size):
+                    if btn_index < len(btn_items):
+                        text, callback_data = btn_items[btn_index]
+                        if callback_data.startswith("http"):
+                            row.append(InlineKeyboardButton(text, url=callback_data))
+                        else:
+                            row.append(InlineKeyboardButton(text, callback_data=callback_data))
+                        btn_index += 1
+                if row:
+                    buttons.append(row)
+        else:
+            # Default single column layout
+            for text, callback_data in btn.items():
+                if callback_data.startswith("http"):
+                    buttons.append([InlineKeyboardButton(text, url=callback_data)])
+                else:
+                    buttons.append([InlineKeyboardButton(text, callback_data=callback_data)])
+        
+        return InlineKeyboardMarkup(buttons) if buttons else None
+        
+    except Exception as e:
+        logger.exception(f"Button creation error: {e}")
+        return None
 
+# Additional utility functions
+def format_bytes(size):
+    """Convert bytes to human readable format"""
+    for unit in ['B', 'KB', 'MB', 'GB', 'TB']:
+        if size < 1024.0:
+            return f"{size:.1f}{unit}"
+        size /= 1024.0
+    return f"{size:.1f}PB"
 
-#  GET USER LANG CODE 
-async def getLang(chatID :int) -> str:
-    if not settings.MULTI_LANG_SUP:  # if multiple lang not supported
-        return str(settings.DEFAULT_LANG)  # return default lang
-    lang = __users__.userLang.get(
-        int(chatID), str(settings.DEFAULT_LANG)
-    )  # else return corresponding lang code
-    return (
-        lang if lang in langList else settings.DEFAULT_LANG
-    )  # return lang code if in langList(
-    # this way you can simply remove lang by removing lang from list)
-
-
-#  ADD VALUES TO CB DICT 
-async def editDICT(
-    inDir: dict, value :bool = False, front=False
-) -> dict:
-    outDir = {}
-
-    if front:  # changes cb in UI
-        for i, j in inDir.items():
-            outDir[i.format(front)] = j
-        inDir = outDir
-    if value and type(value) != list:  # changes cb.data
-        for i, j in inDir.items():
-            outDir[i] = j.format(value)
-    elif value and type(value) == list:
-        if len(value) == 2:
-            for i, j in inDir.items():
-                outDir[i] = j.format(value[0], value[1])
-        if len(value) == 3:
-            for i, j in inDir.items():
-                outDir[i] = j.format(value[0], value[1], value[2])
-    return outDir
+async def progress_callback(current, total, message, action="Processing"):
+    """Progress callback for file operations"""
+    try:
+        percentage = current * 100 / total
+        progress_str = f"{action}: {percentage:.1f}%"
+        
+        if percentage % 5 == 0:  # Update every 5%
+            try:
+                await message.edit_text(progress_str)
+            except Exception:
+                pass  # Ignore edit errors
+    except Exception:
+        pass
 
 # If you have any questions or suggestions, please feel free to reach out.
 # Together, we can make this project even better, Happy coding!  XD
