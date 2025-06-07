@@ -71,14 +71,18 @@ class Database:
         b_users = [user["id"] async for user in users]
         return b_users, b_chats
 
-    # ----- GET BETA USERS, CHAT LIST [LOADED 1ST] -----
+    # Beta functionality removed as requested
+    # The get_beta method has been disabled and will return empty list
     async def get_beta(self):
-        users = self.col.find({"beta": {"$regex": "^(?!\s*$).+"}})
-        beta_users = [user["id"] async for user in users]
-        return beta_users
+        """Beta functionality disabled - returns empty list"""
+        return []
 
     # ----- SET THUMBNAIL -----
     async def set_key(self, id, key, value, typ="user"):
+        # Prevent setting beta key as beta functionality is removed
+        if key == "beta":
+            return None
+            
         if typ == "user":
             if value is None:
                 return await self.col.update_one({"id": id}, {"$unset": {f"{key}": ""}})
@@ -93,6 +97,10 @@ class Database:
 
     # ----- GET VALUE -----
     async def get_key(self, id, key, typ="user"):
+        # Return None for beta key as beta functionality is removed
+        if key == "beta":
+            return None
+            
         if typ == "user":
             user = await self.col.find_one({"id": int(id)})
             if user is None:
@@ -137,6 +145,12 @@ class Database:
     # -----  GET DB SIZE -----
     async def get_db_size(self):
         return (await self.db.command("dbstats"))["dataSize"]
+
+    # ----- CLEANUP BETA DATA (Migration helper) -----
+    async def cleanup_beta_data(self):
+        """Remove all beta-related data from database"""
+        await self.col.update_many({}, {"$unset": {"beta": ""}})
+        await self.grp.update_many({}, {"$unset": {"beta": ""}})
 
 if dataBASE.MONGODB_URI:
     db = Database(dataBASE.MONGODB_URI, "nabilanavab-iLovePDF")
