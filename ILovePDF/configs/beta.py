@@ -1,16 +1,32 @@
 # This module is part of https://github.com/nabilanavab/ilovepdf
 # Feel free to use and contribute to this project. Your contributions are welcome!
-# Copyright ©️ 2021 nabilanavab
+# copyright ©️ 2021 nabilanavab
 
 file_name = "ILovePDF/configs/beta.py"
 
-"""
-A list of user IDs can be used to identify a group of beta users,
-who are typically a subset of users selected to test new features
-or products before they are released to the general public.
-"""
+# Beta functionality has been removed as requested
+# This file is kept for compatibility but beta features are disabled
 
+# Empty beta users list - no beta features
 BETA = []
 
-# If you have any questions or suggestions, please feel free to reach out.
-# Together, we can make this project even better. Happy coding! XD
+# Beta configuration disabled
+BETA_ENABLED = False
+BETA_FEATURES = []
+
+# Legacy support for existing code
+def is_beta_user(user_id):
+    """Always returns False since beta features are removed"""
+    return False
+
+def add_beta_user(user_id):
+    """No-op function for compatibility"""
+    pass
+
+def remove_beta_user(user_id):
+    """No-op function for compatibility"""
+    pass
+
+def get_beta_users():
+    """Returns empty list"""
+    return []
