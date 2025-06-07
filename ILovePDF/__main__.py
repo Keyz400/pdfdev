@@ -25,7 +25,6 @@ from pyromod import listen
 from lang import __users__
 from plugins.utils import *
 from configs.log import log
-from configs.beta import BETA
 from configs.config import bot, settings, images
 from pyrogram import Client as ILovePDF, errors
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, BotCommand
@@ -56,8 +55,7 @@ class Bot(ILovePDF):
             BANNED_USR_DB.extend(b_users)
             BANNED_GRP_DB.extend(b_chats)
 
-            beta_users = await db.get_beta()
-            BETA.extend(beta_users)
+            # Beta features removed as requested
             # ------- Loads UsersId with custom THUMBNAIL ---------
             users = await db.get_all_users()  # Get all users' Data
             async for user in users:
