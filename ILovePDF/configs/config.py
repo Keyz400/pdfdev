@@ -52,7 +52,7 @@ class images(object):
 
 class settings(object):
 
-    # Updated donation link as requested
+    # Updated donation link as requested - removed COFFEE completely
     DONATE = os.environ.get("DONATE_UPI", "upi://pay?pn=UPAYI&pa=loxbots@airtel&cu=INR")
 
     SEND_RESTART = os.environ.get("SEND_RESTART_MESSAGE", False)
