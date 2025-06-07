@@ -7,9 +7,9 @@ file_name = "ILovePDF/__main__.py"
 
 iLovePDF = '''
   _   _                  ___  ___  ____ ™
- | | | |   _____ _____  | _ \|   \|  __| 
- | | | |__/ _ \ V / -_) |  _/| |) |  _|  
- |_| |___,\___/\_/\___| |_|  |___/|_|    
+ | | | |   _____ _____  | _ \|   \|  __|
+ | | | |__/ _ \ V / -_) |  _/| |) |  _|
+ |_| |___,\___/\_/\___| |_|  |___/|_|
                          ❤ [Nabil A Navab] 
                          ❤ Email: nabilanavab@gmail.com
                          ❤ Telegram: @nabilanavab
@@ -164,8 +164,10 @@ class Bot(ILovePDF):
                     )
                 else:
                     caption = f"{myID[0].first_name} get started successfully...✅"
-                if log.LOG_FILE and log.LOG_FILE[-4:] == ".log":
-                    doc = f"./{log.LOG_FILE}"
+                
+                # Fixed log file handling
+                if log.LOG_FILE and log.LOG_FILE.endswith(".log") and os.path.exists(log.LOG_FILE):
+                    doc = log.LOG_FILE
                     markUp = InlineKeyboardMarkup(
                         [[
                             InlineKeyboardButton("♻️ refresh log ♻️", callback_data="log")
@@ -180,12 +182,21 @@ class Bot(ILovePDF):
                             InlineKeyboardButton("◍ close ◍", callback_data="close|admin")
                         ]]
                     )
-                await app.send_document(
-                    chat_id=int(log.LOG_CHANNEL),
-                    document=doc,
-                    caption=caption,
-                    reply_markup=markUp,
-                )
+                
+                if os.path.exists(doc) and doc.endswith(".log"):
+                    await app.send_document(
+                        chat_id=int(log.LOG_CHANNEL),
+                        document=doc,
+                        caption=caption,
+                        reply_markup=markUp,
+                    )
+                else:
+                    await app.send_photo(
+                        chat_id=int(log.LOG_CHANNEL),
+                        photo=images.THUMBNAIL_URL,
+                        caption=caption,
+                        reply_markup=markUp,
+                    )
             except errors.ChannelInvalid:
                 log.LOG_CHANNEL = False
                 logger.debug(f"BoT NoT AdMiN iN LoG ChAnNeL")
